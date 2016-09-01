@@ -2,7 +2,7 @@
 
 # Provided metrics
 
-## AWS/ECS
+## Ext/AWS/ECS
 
 ### NumberOfRegisteredInstances, NumberOfHealthyRegisteredInstances, NumberOfUnhealthyRegisteredInstances
 

@@ -2,7 +2,7 @@
 
 const loader = require('../src/resolver');
 
-describe('loader', () => {
+describe('resolver', () => {
     describe('resolve flat metrics', () => {
         it('one metric', () => {
             const map     = {
