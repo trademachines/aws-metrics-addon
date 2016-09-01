@@ -1,0 +1,12 @@
+{
+  "aliases": {
+    "ecs-all": "ECS/NumberOfRegisteredInstances"
+  },
+  "sources": {
+    "ecs.amazonaws.com": {
+      "RegisterContainerInstance": "@ecs-all",
+      "DeregisterContainerInstance": "@ecs-all",
+      "SubmitContainerStateChange": "@ecs-all"
+    }
+  }
+}
