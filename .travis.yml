@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '4.3'
 before_deploy:
-  - npm install --production
+  - npm prune --production
 deploy:
   provider: lambda
   function_name: aws-metrics-addon
