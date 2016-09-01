@@ -1,6 +1,6 @@
 {
   "aliases": {
-    "ecs-all": "ECS/NumberOfRegisteredInstances"
+    "ecs-all": "ECS/InstanceBasedClusterMetrics"
   },
   "sources": {
     "ecs.amazonaws.com": {

@@ -23,17 +23,17 @@ const extractMetrics = (instances, cb) => {
     const unhealthy         = healthyPartitions[ 1 ].length;
 
     metrics.push({
-        MetricName: 'NumberOfRegisteredInstances',
+        MetricName: 'RegisteredInstances',
         Value: instances.length,
         Unit: 'Count'
     });
     metrics.push({
-        MetricName: 'NumberOfHealthyRegisteredInstances',
+        MetricName: 'HealthyRegisteredInstances',
         Value: healthy,
         Unit: 'Count'
     });
     metrics.push({
-        MetricName: 'NumberOfUnhealthyRegisteredInstances',
+        MetricName: 'UnhealthyRegisteredInstances',
         Value: unhealthy,
         Unit: 'Count'
     });

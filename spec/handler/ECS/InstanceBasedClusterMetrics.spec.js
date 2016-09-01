@@ -1,6 +1,6 @@
 "use strict";
 
-const handler = require('../../../handler/ECS/NumberOfRegisteredInstances');
+const handler = require('../../../handler/ECS/InstanceBasedClusterMetrics');
 
 describe('ECS/NumberOfRegisteredInstances handler', () => {
     const noop      = () => {
@@ -72,30 +72,30 @@ describe('ECS/NumberOfRegisteredInstances handler', () => {
     });
 
     describe('metrics extraction', () => {
-        it('generate NumberOfRegisteredInstances based on number of instances', () => {
+        it('generate RegisteredInstances based on number of instances', () => {
             handler.extractMetrics(['one', 'two'], (err, metrics) => {
                 expect(metrics.MetricData).toEqual(jasmine.arrayContaining([{
-                    MetricName: 'NumberOfRegisteredInstances',
+                    MetricName: 'RegisteredInstances',
                     Value: 2,
                     Unit: 'Count'
                 }]));
             })
         });
 
-        it('generate NumberOfHealthyRegisteredInstances based on number of instances with connected agent', () => {
+        it('generate HealthyRegisteredInstances based on number of instances with connected agent', () => {
             handler.extractMetrics([{agentConnected: true}, {agentConnected:false}], (err, metrics) => {
                 expect(metrics.MetricData).toEqual(jasmine.arrayContaining([{
-                    MetricName: 'NumberOfHealthyRegisteredInstances',
+                    MetricName: 'HealthyRegisteredInstances',
                     Value: 1,
                     Unit: 'Count'
                 }]));
             });
         });
 
-        it('generate NumberOfUnhealthyRegisteredInstances based on number of instances with connected agent', () => {
+        it('generate UnhealthyRegisteredInstances based on number of instances with connected agent', () => {
             handler.extractMetrics([{agentConnected: true}, {agentConnected:false}], (err, metrics) => {
                 expect(metrics.MetricData).toEqual(jasmine.arrayContaining([{
-                    MetricName: 'NumberOfUnhealthyRegisteredInstances',
+                    MetricName: 'UnhealthyRegisteredInstances',
                     Value: 1,
                     Unit: 'Count'
                 }]));
