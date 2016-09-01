@@ -1,0 +1,8 @@
+{
+  "eventSource": "ecs.amazonaws.com",
+  "eventName": "RegisterContainerInstance",
+  "awsRegion": "eu-west-1",
+  "requestParameters": {
+    "cluster": "some-cluster"
+  }
+}
