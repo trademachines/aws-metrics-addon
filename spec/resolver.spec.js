@@ -1,6 +1,6 @@
 "use strict";
 
-const loader = require('../src/resolver');
+const loader = require('../resolver');
 
 describe('resolver', () => {
     describe('resolve flat metrics', () => {

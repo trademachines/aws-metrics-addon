@@ -1,6 +1,6 @@
 "use strict";
 
-const handler = require('../../../src/handler/ECS/NumberOfRegisteredInstances');
+const handler = require('../../../handler/ECS/NumberOfRegisteredInstances');
 
 describe('ECS/NumberOfRegisteredInstances handler', () => {
     const noop      = () => {
