@@ -1,6 +1,9 @@
 {
   "aliases": {
-    "ecs-all": "ECS/InstanceBasedClusterMetrics"
+    "ecs-all": [
+      "ECS/InstanceBasedClusterMetrics",
+      "ECS/TaskBasedClusterMetrics"
+    ]
   },
   "sources": {
     "ecs.amazonaws.com": {
