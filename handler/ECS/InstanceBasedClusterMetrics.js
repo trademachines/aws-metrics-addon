@@ -1,20 +1,7 @@
 "use strict";
 const _     = require('lodash');
 const async = require('neo-async');
-
-const extractInfo = (ev) => {
-    const region    = _.get(ev, 'awsRegion');
-    let clusterName = _.get(ev, 'requestParameters.cluster');
-
-    if (/^arn:/.test(clusterName)) {
-        clusterName = clusterName.substr(clusterName.lastIndexOf('/') + 1);
-    }
-
-    return {
-        cluster: clusterName,
-        region: region
-    };
-};
+const common = require('./common');
 
 const extractMetrics = (instances, cb) => {
     let metrics             = [];
@@ -71,7 +58,7 @@ const getContainerInstances = (ecs, eventInfo, cb) => {
 };
 
 module.exports = (ecs, event, cb) => {
-    const info       = extractInfo(event);
+    const info       = common.extractInfo(event);
     const dimensions = [ { Name: 'ClusterName', Value: info.cluster } ];
 
     async.waterfall([
@@ -95,7 +82,6 @@ module.exports = (ecs, event, cb) => {
     ], cb);
 };
 
-module.exports.extractInfo = extractInfo;
 module.exports.extractMetrics = extractMetrics;
 module.exports.getContainerInstances = getContainerInstances;
 module.exports.getContainerInstancesDescription = getContainerInstancesDescription;
