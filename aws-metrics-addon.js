@@ -23,8 +23,8 @@ exports.handleMetric = (event, context) => {
             return console.error(err);
         }
 
-        async.each(
-            results,
+        async.eachLimit(
+            results, 3,
             (metric, cb) => cloudWatch.putMetricData(metric, cb),
             (err) => {
                 if (err) {
