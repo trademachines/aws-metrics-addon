@@ -1,6 +1,6 @@
 "use strict";
 
-const loader = require('../resolver');
+const resolver = require('../resolver');
 
 describe('resolver', () => {
     describe('resolve flat metrics', () => {
@@ -12,7 +12,7 @@ describe('resolver', () => {
                     }
                 }
             };
-            const metrics = loader.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
+            const metrics = resolver.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
 
             expect(metrics).toEqual([ "ECS/NumberOfRegisteredInstances" ]);
         });
@@ -25,7 +25,7 @@ describe('resolver', () => {
                     }
                 }
             };
-            const metrics = loader.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
+            const metrics = resolver.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
 
             expect(metrics).toEqual([ "ECS/NumberOfRegisteredInstances", "ECS/SomethingElse" ]);
         });
@@ -43,7 +43,7 @@ describe('resolver', () => {
                     }
                 }
             };
-            const metrics = loader.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
+            const metrics = resolver.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
 
             expect(metrics).toEqual([ "ECS/NumberOfRegisteredInstances" ]);
         });
@@ -60,7 +60,7 @@ describe('resolver', () => {
                     }
                 }
             };
-            const metrics = loader.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
+            const metrics = resolver.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
 
             expect(metrics).toEqual([ "ECS/NumberOfRegisteredInstances", "ECS/SomethingElse" ]);
         });
@@ -76,7 +76,7 @@ describe('resolver', () => {
                     }
                 }
             };
-            const metrics = loader.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
+            const metrics = resolver.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
 
             expect(metrics).toEqual([ "ECS/NumberOfRegisteredInstances", "ECS/SomethingElse" ]);
         });
@@ -93,7 +93,7 @@ describe('resolver', () => {
                     }
                 }
             };
-            const metrics = loader.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
+            const metrics = resolver.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
 
             expect(metrics).toEqual([ "ECS/NumberOfRegisteredInstances", "ECS/SomethingElse" ]);
         });
@@ -113,7 +113,7 @@ describe('resolver', () => {
                     }
                 }
             };
-            const metrics = loader.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
+            const metrics = resolver.metrics(map, 'ecs.amazonaws.com', 'RegisterContainerInstance');
 
             expect(metrics).toEqual([ "ECS/NumberOfRegisteredInstances", "ECS/SomethingElse" ]);
         });
