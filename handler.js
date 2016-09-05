@@ -21,7 +21,7 @@ module.exports = (ecs, cloudwatch, resolver, logger, event, done) => {
             results, 3,
             (metric, cb) => {
                 async.eachLimit(
-                    _.chunk(metric.MetricData, 20), 2,
+                    _.chunk(metric.MetricData, 20), 3,
                     (chunk, cb) => cloudwatch.putMetricData(_.assign({}, metric, { MetricData: chunk }), cb),
                     cb
                 );
@@ -39,7 +39,7 @@ module.exports = (ecs, cloudwatch, resolver, logger, event, done) => {
     };
 
     async.mapLimit(
-        functions, 2,
+        functions, 3,
         callFunctions,
         writeMetrics
     );
