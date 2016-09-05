@@ -10,3 +10,6 @@
 | Ext/AWS/ECS | RunningTasks | ClusterName | The number of tasks in a cluster that have state 'running'. |
 | Ext/AWS/ECS | PendingTasks | ClusterName | The number of tasks in a cluster that have state 'pending'. |
 | Ext/AWS/ECS | ActiveServices | ClusterName | The number of services in a cluster that are active. |
+| Ext/AWS/ECS | DesiredTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that you won't to have. |
+| Ext/AWS/ECS | RunningTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that are currently running. |
+| Ext/AWS/ECS | PendingTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that are currently booting up. |

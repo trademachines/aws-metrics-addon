@@ -2,7 +2,8 @@
   "aliases": {
     "ecs-all": [
       "ECS/InstanceBasedClusterMetrics",
-      "ECS/TaskBasedClusterMetrics"
+      "ECS/TaskBasedClusterMetrics",
+      "ECS/TaskBasedTaskMetrics"
     ]
   },
   "sources": {
