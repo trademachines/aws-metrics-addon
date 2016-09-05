@@ -1,42 +1,10 @@
-"use strict";
 const AWS      = require('aws-sdk');
+const handler  = require('./handler');
 const resolver = require('./resolver');
-const _        = require('lodash');
-const async    = require('neo-async');
-const eventMap = require('./aws-event-source-map.json');
+
+const ecs        = new AWS.ECS();
+const cloudWatch = new AWS.CloudWatch();
 
 exports.handleMetric = (event, context) => {
-    const ecs        = new AWS.ECS();
-    const cloudWatch = new AWS.CloudWatch();
-
-    const functions     = resolver(eventMap, event.eventSource, event.eventName);
-    const callFunctions = (f, cb) => {
-        try {
-            f(ecs, event, cb);
-        } catch (e) {
-            console.error(e);
-        }
-    };
-    const writeMetrics  = (err, results) => {
-        if (err) {
-
-            return console.error(err);
-        }
-
-        async.eachLimit(
-            results, 3,
-            (metric, cb) => cloudWatch.putMetricData(metric, cb),
-            (err) => {
-                if (err) {
-                    console.error(err);
-                }
-            }
-        );
-    };
-
-    async.mapLimit(
-        functions, 2,
-        callFunctions,
-        writeMetrics
-    );
+    handler(ecs, cloudWatch, resolver, console, event);
 };
