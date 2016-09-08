@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const extractInfo = (ev) => {
     const region    = _.get(ev, 'awsRegion');
+    const container = _.get(ev, 'requestParameters.containerName');
     let clusterName = _.get(ev, 'requestParameters.cluster');
 
     if (/^arn:/.test(clusterName)) {
@@ -11,7 +12,8 @@ const extractInfo = (ev) => {
 
     return {
         cluster: clusterName,
-        region: region
+        region: region,
+        container: container
     };
 };
 

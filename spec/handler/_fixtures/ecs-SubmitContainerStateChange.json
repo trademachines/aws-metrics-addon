@@ -8,6 +8,6 @@
     "task": "arn:aws:ecs:eu-west-1:xxx:task/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
     "status": "STOPPED",
     "cluster": "some-cluster",
-    "containerName": "<unknown>"
+    "containerName": "foobar"
   }
 }

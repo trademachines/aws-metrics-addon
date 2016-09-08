@@ -1,16 +1,18 @@
 {
   "aliases": {
-    "ecs-all": [
+    "ecs-cluster": [
       "ECS/InstanceBasedClusterMetrics",
-      "ECS/TaskBasedClusterMetrics",
+      "ECS/TaskBasedClusterMetrics"
+    ],
+    "ecs-task": [
       "ECS/TaskBasedTaskMetrics"
     ]
   },
   "sources": {
     "ecs.amazonaws.com": {
-      "RegisterContainerInstance": "@ecs-all",
-      "DeregisterContainerInstance": "@ecs-all",
-      "SubmitContainerStateChange": "@ecs-all"
+      "RegisterContainerInstance": "@ecs-cluster",
+      "DeregisterContainerInstance": "@ecs-cluster",
+      "SubmitContainerStateChange": "@ecs-task"
     }
   }
 }
