@@ -1,4 +1,4 @@
-# AWS Metrics Addon [![Build Status](https://travis-ci.org/trademachines/aws-metrics-addon.svg?branch=master)](https://travis-ci.org/trademachines/aws-metrics-addon)
+# AWS Metrics Addon [![Build Status](https://travis-ci.org/trademachines/aws-metrics-addon.svg?branch=master)](https://travis-ci.org/trademachines/aws-metrics-addon) [![Coverage Status](https://coveralls.io/repos/github/trademachines/aws-metrics-addon/badge.svg?branch=master)](https://coveralls.io/github/trademachines/aws-metrics-addon?branch=master)
 
 # Provided metrics
 
