@@ -1,9 +1,8 @@
 "use strict";
 const _        = require('lodash');
 const async    = require('neo-async');
-const eventMap = require('./aws-event-source-map.json');
 
-module.exports = (ecs, cloudwatch, resolver, logger, event, done) => {
+module.exports = (ecs, cloudwatch, eventMap, resolver, logger, event, done) => {
     const functions     = resolver(eventMap, event.eventSource, event.eventName);
     const callFunctions = (f, cb) => {
         try {

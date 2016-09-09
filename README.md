@@ -13,3 +13,32 @@
 | Ext/AWS/ECS | DesiredTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that you won't to have. |
 | Ext/AWS/ECS | RunningTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that are currently running. |
 | Ext/AWS/ECS | PendingTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that are currently booting up. |
+
+# Configuration
+
+Is done via retrieving the configuration file from S3 by utilising [the aws-lambda-config package](https://www.npmjs.com/package/aws-lambda-config).
+
+## Current configuration
+
+````
+{
+  "event-source-map": {
+    "aliases": {
+      "ecs-cluster": [
+        "ECS/InstanceBasedClusterMetrics",
+        "ECS/TaskBasedClusterMetrics"
+      ],
+      "ecs-task": [
+        "ECS/TaskBasedTaskMetrics"
+      ]
+    },
+    "sources": {
+      "ecs.amazonaws.com": {
+        "RegisterContainerInstance": "@ecs-cluster",
+        "DeregisterContainerInstance": "@ecs-cluster",
+        "SubmitContainerStateChange": "@ecs-task"
+      }
+    }
+  }
+}
+````

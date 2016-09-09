@@ -28,7 +28,7 @@ describe('handler', () => {
         const fn    = mockFn('resolved function', []);
         resolver    = jasmine.createSpy('resolver').and.returnValue([ fn ]);
 
-        handler(ecs, cloudwatch, resolver, logger, event, () => {
+        handler(ecs, cloudwatch, {}, resolver, logger, event, () => {
             expect(fn).toHaveBeenCalledWith(jasmine.anything(), event, jasmine.anything());
             done();
         });
@@ -40,7 +40,7 @@ describe('handler', () => {
         const fn      = mockFn('resolved function', metrics);
         resolver      = jasmine.createSpy('resolver').and.returnValue([ fn ]);
 
-        handler(ecs, cloudwatch, resolver, logger, event, () => {
+        handler(ecs, cloudwatch, {}, resolver, logger, event, () => {
             expect(cloudwatch.putMetricData).toHaveBeenCalledWith({ MetricData: metrics }, jasmine.anything());
             done();
         });
@@ -52,7 +52,7 @@ describe('handler', () => {
         const fn      = mockFn('resolved function', metrics);
         resolver      = jasmine.createSpy('resolver').and.returnValue([ fn ]);
 
-        handler(ecs, cloudwatch, resolver, logger, event, () => {
+        handler(ecs, cloudwatch, {}, resolver, logger, event, () => {
             expect(cloudwatch.putMetricData).toHaveBeenCalledWith({ MetricData: metrics }, jasmine.anything());
             done();
         });
@@ -64,7 +64,7 @@ describe('handler', () => {
         const fn      = mockFn('resolved function', metrics);
         resolver      = jasmine.createSpy('resolver').and.returnValue([ fn ]);
 
-        handler(ecs, cloudwatch, resolver, logger, event, () => {
+        handler(ecs, cloudwatch, {}, resolver, logger, event, () => {
             expect(cloudwatch.putMetricData).toHaveBeenCalledTimes(2);
             done();
         });
