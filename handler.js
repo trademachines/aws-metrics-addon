@@ -3,6 +3,8 @@ const _        = require('lodash');
 const async    = require('neo-async');
 
 module.exports = (ecs, cloudwatch, eventMap, resolver, logger, event, done) => {
+    console.log(`Received event ${JSON.stringify(event)}`);
+
     const functions     = resolver(eventMap, event.eventSource, event.eventName);
     const callFunctions = (f, cb) => {
         try {
