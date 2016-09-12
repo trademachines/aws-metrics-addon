@@ -16,6 +16,8 @@ module.exports = (ecs, cloudwatch, eventMap, resolver, logger, event, done) => {
             return logger.error(err);
         }
 
+        console.log(`Writing results ${JSON.stringify(results)}`);
+
         async.eachLimit(
             results, 3,
             (metric, cb) => {
