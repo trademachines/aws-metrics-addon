@@ -13,6 +13,7 @@ deploy:
   role: arn:aws:iam::608300940987:role/lambda-aws-metrics-addon
   runtime: nodejs4.3
   memory_size: 128
+  timeout: 10
   region: eu-west-1
   access_key_id:
     secure: pxRvpnT6vfab8Nrj7qVJHRBhLi2FPRqyrJRaZfhWl+HrIkvcRiNMEmXcGuKmutZIDJGsMlOWEmuP0mAi+vb98+BiGIsEOVVgfKKdLBwFa3KwltHn/OZTblDVWhBsRjM1tuY1i/ZMuTmhm7wYt/JIvr9R4aP1WD4qzx3IB5wORLnaLVr7uYkIui+eI57aOEXeObmDwLx6Dl6XV0mLbobscSjk/AIXSYlofODl+FaivHlRJT7mfoLDCvD126/V3feLY2J2cwmag3faFA/Fq/yWMES8RAMxADNTvFvGcd7e32DlhnCwhCWnQx6dLVLUOUhCMVj9GEcadJ7TWEZBuLIF4hLl9TtUX+tw4IG8w4Wv41hDvqEj2EwfQeday0BdaKyoKLJdFhBDHESRkH2v+zJl4OjUlKeugfPOwooSAmLRzMYECGj79/NBtl0hXBE5/LDlb6BqW96ObKw4bwcNsKdx0KIGeZR7i6C8T2iGbud9Jo9RfmRTrScVCrkhkHdQZNa5BirD/iD3wGvSbAj3LgzCeNIcBx9w/9JWb9NNlWuDm9RYt83omNNWlZT/b3HeedGHGq1gG7RieOhabEE9LIllFD9wLDJCbfxZ4QlA1INJrfzl53z9RemZWY7wRt+7oIjMCZbCyjzFEyNY+FyT/4NuiV5DOzL6bzz3kTLpGs/cHCg=
