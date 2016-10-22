@@ -30,42 +30,79 @@ const extractMetrics = (service, cb) => {
     cb(null, metricData);
 };
 
-const getServiceDescription = (ecs, eventInfo, cb) => {
-    ecs.describeServices({
-        cluster: eventInfo.cluster,
-        services: [ eventInfo.container ]
-    }, (err, data) => {
-        if (err) {
-            return cb(err);
-        }
+const getServiceByDeploymentId = (ecs, cluster, serviceDeploymentId, cb) => {
+    let token   = null;
+    let service = null;
 
-        cb(null, _.chain(data.services)
-            .find({ serviceName: eventInfo.container })
-            .omit('events', 'deployments')
-            .value());
+    async.doUntil(
+        (cb) => async.seq(
+            (t, cb) => ecs.listServices({ cluster: cluster, nextToken: t }, cb),
+            (response, cb) => ecs.describeServices({
+                cluster: cluster,
+                services: response.serviceArns
+            }, (err, data) => {
+                if (err) {
+                    return cb(err);
+                }
+
+                cb(null, [ response.nextToken, data.services ]);
+            })
+        )(token, cb),
+        (data) => {
+            service = _.find(
+                data[ 1 ],
+                (s) => _.map(s.deployments, 'id').indexOf(serviceDeploymentId) >= 0
+            );
+
+            const lastToken = token;
+            token           = data[ 0 ];
+
+            return service || lastToken === token;
+        },
+        (err) => cb(err, service)
+    )
+};
+
+const getServiceDescription = (ecs, eventInfo, cb) => {
+    async.waterfall([
+        (cb) => {
+            ecs.describeTasks({
+                cluster: eventInfo.cluster,
+                tasks: [ eventInfo.task ]
+
+            }, cb)
+        },
+        (data, cb) => cb(null, _.get(data, 'tasks.0.startedBy')),
+        (serviceId, cb) => getServiceByDeploymentId(ecs, eventInfo.cluster, serviceId, cb),
+        (service, cb) => cb(null, _.omit(service, 'event', 'deployments'))
+    ], cb);
+};
+
+const addDimensions = (info, service, metrics, cb) => {
+    const dimensions = [ { Name: 'ClusterName', Value: info.cluster }, {
+        Name: 'ServiceName',
+        Value: service.serviceName
+    } ];
+
+    metrics.MetricData = _.map(metrics.MetricData, (m) => {
+        m.Dimensions = dimensions;
+        return m;
     });
+
+    cb(null, metrics);
 };
 
 module.exports = (ecs, event, cb) => {
-    const info       = common.extractInfo(event);
-    const dimensions = [ { Name: 'ClusterName', Value: info.cluster }, { Name: 'ServiceName', Value: info.container } ];
+    const info = common.extractInfo(event);
 
-    async.waterfall([
-        (cb) => {
-            getServiceDescription(ecs, info, cb);
+    async.auto(
+        {
+            service: (cb) => getServiceDescription(ecs, info, cb),
+            metrics: [ 'service', (results, cb) => extractMetrics(results.service, cb) ],
+            withDimensions: [ 'metrics', (results, cb) => addDimensions(info, results.service, results.metrics, cb) ]
         },
-        (services, cb) => {
-            extractMetrics(services, cb);
-        },
-        (metrics, cb) => {
-            metrics.MetricData = _.map(metrics.MetricData, (m) => {
-                m.Dimensions = dimensions;
-                return m;
-            });
-
-            cb(null, metrics);
-        }
-    ], cb);
+        (err, results) => cb(err, results.withDimensions)
+    );
 };
 
 module.exports.extractMetrics        = extractMetrics;
