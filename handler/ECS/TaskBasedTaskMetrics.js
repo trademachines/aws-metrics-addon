@@ -3,8 +3,9 @@ const _      = require('lodash');
 const async  = require('neo-async');
 const common = require('./common');
 
-const extractMetrics = (service, cb) => {
-    let metrics = [];
+const extractMetrics = (service, tasks, cb) => {
+    const tasksArns = _.uniq(_.map(tasks, 'taskDefinitionArn'));
+    let metrics     = [];
 
     metrics.push({
         MetricName: 'DesiredTasks',
@@ -19,6 +20,16 @@ const extractMetrics = (service, cb) => {
     metrics.push({
         MetricName: 'PendingTasks',
         Value: service.pendingCount,
+        Unit: 'Count'
+    });
+    metrics.push({
+        MetricName: 'DiffDesiredAndRunningTasks',
+        Value: Math.abs(service.desiredCount - service.runningCount),
+        Unit: 'Count'
+    });
+    metrics.push({
+        MetricName: 'DiffTaskDefinition',
+        Value: tasksArns.length === 0 || (tasksArns.length === 1 && tasksArns[ 0 ] === service.taskDefinition) ? 0 : 1,
         Unit: 'Count'
     });
 
@@ -67,7 +78,7 @@ const getServiceByDeploymentId = (ecs, cluster, serviceDeploymentId, cb) => {
 
             cb(null, service)
         }
-    )
+    );
 };
 
 const getServiceDescription = (ecs, eventInfo, cb) => {
@@ -83,6 +94,34 @@ const getServiceDescription = (ecs, eventInfo, cb) => {
         (serviceId, cb) => getServiceByDeploymentId(ecs, eventInfo.cluster, serviceId, cb),
         (service, cb) => cb(null, _.omit(service, 'events', 'deployments'))
     ], cb);
+};
+
+const getTasksForService = (ecs, eventInfo, service, cb) => {
+    let token = null;
+    let tasks = [];
+
+    async.doUntil(
+        (cb) => async.seq(
+            (t, cb) => ecs.listTasks({ cluster: eventInfo.cluster, family: service.serviceName, nextToken: t }, cb),
+            (response, cb) => ecs.describeTasks({
+                cluster: eventInfo.cluster,
+                tasks: response.taskArns
+            }, (err, data) => {
+                if (err) {
+                    return cb(err);
+                }
+
+                cb(null, [ response.nextToken, data.tasks ]);
+            })
+        )(token, cb),
+        (data) => {
+            tasks = tasks.concat(data[ 1 ]);
+            return !(token = data[ 0 ]);
+        },
+        (err) => {
+            cb(err, tasks);
+        }
+    );
 };
 
 const addDimensions = (info, service, metrics, cb) => {
@@ -105,7 +144,8 @@ module.exports = (ecs, event, cb) => {
     async.auto(
         {
             service: (cb) => getServiceDescription(ecs, info, cb),
-            metrics: [ 'service', (results, cb) => extractMetrics(results.service, cb) ],
+            tasks: [ 'service', (results, cb) => getTasksForService(ecs, info, results.service, cb) ],
+            metrics: [ 'service', 'tasks', (results, cb) => extractMetrics(results.service, results.tasks, cb) ],
             withDimensions: [ 'metrics', (results, cb) => addDimensions(info, results.service, results.metrics, cb) ]
         },
         (err, results) => cb(err, results.withDimensions)
@@ -114,3 +154,4 @@ module.exports = (ecs, event, cb) => {
 
 module.exports.extractMetrics        = extractMetrics;
 module.exports.getServiceDescription = getServiceDescription;
+module.exports.getTasksForService    = getTasksForService;
