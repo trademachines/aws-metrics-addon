@@ -54,12 +54,19 @@ const getServiceByDeploymentId = (ecs, cluster, serviceDeploymentId, cb) => {
                 (s) => _.map(s.deployments, 'id').indexOf(serviceDeploymentId) >= 0
             );
 
-            const lastToken = token;
-            token           = data[ 0 ];
-
-            return service || lastToken === token;
+            return service || !(token = data[ 0 ]);
         },
-        (err) => cb(err, service)
+        (err) => {
+            if (err) {
+                return cb(err);
+            }
+
+            if (!service) {
+                return cb(new Error(`Cant't find service with deployment id ${serviceDeploymentId}`));
+            }
+
+            cb(null, service)
+        }
     )
 };
 
@@ -74,7 +81,7 @@ const getServiceDescription = (ecs, eventInfo, cb) => {
         },
         (data, cb) => cb(null, _.get(data, 'tasks.0.startedBy')),
         (serviceId, cb) => getServiceByDeploymentId(ecs, eventInfo.cluster, serviceId, cb),
-        (service, cb) => cb(null, _.omit(service, 'event', 'deployments'))
+        (service, cb) => cb(null, _.omit(service, 'events', 'deployments'))
     ], cb);
 };
 
