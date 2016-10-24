@@ -3,6 +3,12 @@ const _      = require('lodash');
 const async  = require('neo-async');
 const common = require('./common');
 
+const extractMetricsWithDebug = (event, service, tasks, cb) => {
+    console.log('task-based-metrics', JSON.stringify(event), JSON.stringify(service), JSON.stringify(tasks));
+
+    extractMetrics(service, tasks, cb);
+};
+
 const extractMetrics = (service, tasks, cb) => {
     const tasksArns = _.uniq(_.map(tasks, 'taskDefinitionArn'));
     let metrics     = [];
@@ -145,7 +151,7 @@ module.exports = (ecs, event, cb) => {
         {
             service: (cb) => getServiceDescription(ecs, info, cb),
             tasks: [ 'service', (results, cb) => getTasksForService(ecs, info, results.service, cb) ],
-            metrics: [ 'service', 'tasks', (results, cb) => extractMetrics(results.service, results.tasks, cb) ],
+            metrics: [ 'service', 'tasks', (results, cb) => extractMetricsWithDebug(event, results.service, results.tasks, cb) ],
             withDimensions: [ 'metrics', (results, cb) => addDimensions(info, results.service, results.metrics, cb) ]
         },
         (err, results) => cb(err, results.withDimensions)
