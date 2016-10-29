@@ -3,6 +3,12 @@ const _     = require('lodash');
 const async = require('neo-async');
 const common = require('./common');
 
+const extractMetricsWithDebug = (event, instances, cb) => {
+    console.log('instance-based-metrics', JSON.stringify(event), JSON.stringify(instances));
+
+    extractMetrics(instances, cb);
+};
+
 const extractMetrics = (instances, cb) => {
     let metrics             = [];
     const healthyPartitions = _.partition(instances, 'agentConnected');
@@ -69,7 +75,7 @@ module.exports = (ecs, event, cb) => {
             getContainerInstancesDescription(ecs, info, instancesData, cb);
         },
         (instancesData, cb) => {
-            extractMetrics(instancesData, cb);
+            extractMetricsWithDebug(event, instancesData, cb);
         },
         (metrics, cb) => {
             metrics.MetricData = _.map(metrics.MetricData, (m) => {

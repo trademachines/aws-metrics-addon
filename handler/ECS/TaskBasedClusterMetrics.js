@@ -3,6 +3,12 @@ const _      = require('lodash');
 const async  = require('neo-async');
 const common = require('./common');
 
+const extractMetricsWithDebug = (event, cluster, cb) => {
+    console.log('cluster-based-metrics', JSON.stringify(event), JSON.stringify(cluster));
+
+    extractMetrics(cluster, cb);
+};
+
 const extractMetrics = (cluster, cb) => {
     let metrics = [];
 
@@ -49,7 +55,7 @@ module.exports = (ecs, event, cb) => {
             getClusterDescription(ecs, info, cb);
         },
         (clusterData, cb) => {
-            extractMetrics(clusterData, cb);
+            extractMetricsWithDebug(event, clusterData, cb);
         },
         (metrics, cb) => {
             metrics.MetricData = _.map(metrics.MetricData, (m) => {
