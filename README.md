@@ -25,18 +25,18 @@ Is done via retrieving the configuration file from S3 by utilising [the aws-lamb
   "event-source-map": {
     "aliases": {
       "ecs-cluster": [
-        "ECS/InstanceBasedClusterMetrics",
-        "ECS/TaskBasedClusterMetrics"
+        "ECS/InstanceMetrics",
+        "ECS/ClusterMetrics"
       ],
-      "ecs-task": [
-        "ECS/TaskBasedTaskMetrics"
+      "ecs-service": [
+        "ECS/ServiceMetrics"
       ]
     },
     "sources": {
       "ecs.amazonaws.com": {
         "RegisterContainerInstance": "@ecs-cluster",
         "DeregisterContainerInstance": "@ecs-cluster",
-        "SubmitContainerStateChange": "@ecs-task"
+        "SubmitContainerStateChange": "@ecs-service"
       }
     }
   }

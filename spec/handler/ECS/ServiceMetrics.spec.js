@@ -1,8 +1,8 @@
 "use strict";
 const _       = require('lodash');
-const handler = require('../../../handler/ECS/TaskBasedTaskMetrics');
+const handler = require('../../../handler/ECS/ServiceMetrics');
 
-describe('ECS/TaskBasedTaskMetrics handler', () => {
+describe('ECS/ServiceMetrics handler', () => {
     let ecsSdk;
     const noop      = () => {
     };

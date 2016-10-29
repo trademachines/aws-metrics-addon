@@ -1,8 +1,8 @@
 "use strict";
 
-const handler = require('../../../handler/ECS/TaskBasedClusterMetrics');
+const handler = require('../../../handler/ECS/ClusterMetrics');
 
-describe('ECS/TaskBasedClusterMetrics handler', () => {
+describe('ECS/ClusterMetrics handler', () => {
     const noop = () => {
     };
     const eventInfo = {
