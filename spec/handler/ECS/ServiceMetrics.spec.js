@@ -259,41 +259,45 @@ describe('ECS/ServiceMetrics handler', () => {
 
     describe('metrics extraction', () => {
         it('generate DesiredTasks', () => {
-            handler.extractMetrics(service('x', 1, 2, 3), [], (err, metrics) => {
+            handler.extractMetrics({}, service('x', 1, 2, 3), [], (err, metrics) => {
                 expect(metrics.MetricData).toEqual(jasmine.arrayContaining([ {
                     MetricName: 'DesiredTasks',
                     Value: 1,
-                    Unit: 'Count'
+                    Unit: 'Count',
+                    Dimensions: jasmine.anything()
                 } ]));
             })
         });
 
         it('generate RunningTasks', () => {
-            handler.extractMetrics(service('x', 1, 2, 3), [], (err, metrics) => {
+            handler.extractMetrics({}, service('x', 1, 2, 3), [], (err, metrics) => {
                 expect(metrics.MetricData).toEqual(jasmine.arrayContaining([ {
                     MetricName: 'RunningTasks',
                     Value: 2,
-                    Unit: 'Count'
+                    Unit: 'Count',
+                    Dimensions: jasmine.anything()
                 } ]));
             })
         });
 
         it('generate PendingTasks', () => {
-            handler.extractMetrics(service('x', 1, 2, 3), [], (err, metrics) => {
+            handler.extractMetrics({}, service('x', 1, 2, 3), [], (err, metrics) => {
                 expect(metrics.MetricData).toEqual(jasmine.arrayContaining([ {
                     MetricName: 'PendingTasks',
                     Value: 3,
-                    Unit: 'Count'
+                    Unit: 'Count',
+                    Dimensions: jasmine.anything()
                 } ]));
             })
         });
 
         it('generate DiffDesiredAndRunningTasks', () => {
-            handler.extractMetrics(service('x', 3, 2, 0), [], (err, metrics) => {
+            handler.extractMetrics({}, service('x', 3, 2, 0), [], (err, metrics) => {
                 expect(metrics.MetricData).toEqual(jasmine.arrayContaining([ {
                     MetricName: 'DiffDesiredAndRunningTasks',
                     Value: 1,
-                    Unit: 'Count'
+                    Unit: 'Count',
+                    Dimensions: jasmine.anything()
                 } ]));
             })
         });
@@ -301,11 +305,12 @@ describe('ECS/ServiceMetrics handler', () => {
         describe('generate DiffTaskDefinition', () => {
             it('no tasks gives 0', () => {
                 const tasks = [];
-                handler.extractMetrics(service('x', 3, 2, 0, { taskDefinition: 'task:1' }), tasks, (err, metrics) => {
+                handler.extractMetrics({}, service('x', 3, 2, 0, { taskDefinition: 'task:1' }), tasks, (err, metrics) => {
                     expect(metrics.MetricData).toEqual(jasmine.arrayContaining([ {
                         MetricName: 'DiffTaskDefinition',
                         Value: 0,
-                        Unit: 'Count'
+                        Unit: 'Count',
+                        Dimensions: jasmine.anything()
                     } ]));
                 })
             });
@@ -315,11 +320,12 @@ describe('ECS/ServiceMetrics handler', () => {
                     { taskDefinitionArn: 'task:1' },
                     { taskDefinitionArn: 'task:1' }
                 ];
-                handler.extractMetrics(service('x', 3, 2, 0, { taskDefinition: 'task:1' }), tasks, (err, metrics) => {
+                handler.extractMetrics({}, service('x', 3, 2, 0, { taskDefinition: 'task:1' }), tasks, (err, metrics) => {
                     expect(metrics.MetricData).toEqual(jasmine.arrayContaining([ {
                         MetricName: 'DiffTaskDefinition',
                         Value: 0,
-                        Unit: 'Count'
+                        Unit: 'Count',
+                        Dimensions: jasmine.anything()
                     } ]));
                 })
             });
@@ -329,11 +335,12 @@ describe('ECS/ServiceMetrics handler', () => {
                     { taskDefinitionArn: 'task:1' },
                     { taskDefinitionArn: 'task:2' }
                 ];
-                handler.extractMetrics(service('x', 3, 2, 0, { taskDefinition: 'task:1' }), tasks, (err, metrics) => {
+                handler.extractMetrics({}, service('x', 3, 2, 0, { taskDefinition: 'task:1' }), tasks, (err, metrics) => {
                     expect(metrics.MetricData).toEqual(jasmine.arrayContaining([ {
                         MetricName: 'DiffTaskDefinition',
                         Value: 1,
-                        Unit: 'Count'
+                        Unit: 'Count',
+                        Dimensions: jasmine.anything()
                     } ]));
                 })
             });
