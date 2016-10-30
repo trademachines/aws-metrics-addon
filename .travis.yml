@@ -7,10 +7,10 @@ before_deploy:
   - npm prune --production
 deploy:
   provider: lambda
-  function_name: aws-metrics-addon
+  function_name: metrics-addon
   module_name: aws-metrics-addon
   handler_name: handleMetric
-  role: arn:aws:iam::608300940987:role/lambda-aws-metrics-addon
+  role: arn:aws:iam::608300940987:role/lambda-metrics-addon
   runtime: nodejs4.3
   memory_size: 128
   timeout: 20
