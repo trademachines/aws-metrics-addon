@@ -19,10 +19,13 @@ module.exports = (ecs, cloudwatch, eventMap, resolver, logger, event, done) => {
         }
 
         console.log(`Writing results ${JSON.stringify(results)}`);
+        let metricCount = 0;
 
         async.eachLimit(
             results, 3,
             (metric, cb) => {
+                metricCount += metric.MetricData.length;
+
                 async.eachLimit(
                     _.chunk(metric.MetricData, 20), 3,
                     (chunk, cb) => cloudwatch.putMetricData(_.assign({}, metric, { MetricData: chunk }), cb),
@@ -34,9 +37,19 @@ module.exports = (ecs, cloudwatch, eventMap, resolver, logger, event, done) => {
                     logger.error(err);
                 }
 
-                if (done) {
-                    done(err);
-                }
+                cloudwatch.putMetricData({ MetricData: [{
+                    MetricName: 'MetricDataWritten',
+                    Value: metricCount,
+                    Unit: 'Count'
+                }], Namespace: 'Ext/AWS' }, () => {
+                    if (err) {
+                        logger.error(err);
+                    }
+
+                    if (done) {
+                        done(err);
+                    }
+                });
             }
         );
     };
