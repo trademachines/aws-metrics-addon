@@ -65,7 +65,8 @@ describe('handler', () => {
         resolver      = jasmine.createSpy('resolver').and.returnValue([ fn ]);
 
         handler(ecs, cloudwatch, {}, resolver, logger, event, () => {
-            expect(cloudwatch.putMetricData).toHaveBeenCalledTimes(2);
+            expect(cloudwatch.putMetricData).toHaveBeenCalledWith({ MetricData: metrics.slice(0, 20) }, jasmine.anything());
+            expect(cloudwatch.putMetricData).toHaveBeenCalledWith({ MetricData: metrics.slice(20) }, jasmine.anything());
             done();
         });
     });
