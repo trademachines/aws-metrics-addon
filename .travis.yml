@@ -9,8 +9,8 @@ deploy:
   provider: lambda
   function_name: metrics-addon
   description: Computes additional metrics for AWS resources
-  module_name: aws-metrics-addon
-  handler_name: handleMetric
+  module_name: index
+  handler_name: handle
   role: arn:aws:iam::608300940987:role/lambda-metrics-addon
   runtime: nodejs4.3
   memory_size: 128
