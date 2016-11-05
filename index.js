@@ -6,7 +6,7 @@ const resolver = require('./resolver');
 const ecs        = new AWS.ECS();
 const cloudWatch = new AWS.CloudWatch();
 
-exports.handleMetric = (event, context) => {
+exports.handle = (event, context) => {
     config.getConfig(context, (err, cfg) => {
         if (err) return console.error(err);
 
