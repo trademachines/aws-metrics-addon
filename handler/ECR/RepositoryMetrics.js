@@ -15,7 +15,6 @@ const extractMetrics = (images, cb) => {
   });
   metrics.push({
     MetricName: 'ImagesSize',
-    Value: _.mean(imageSizes),
     Unit: 'Bytes',
     StatisticValues: {
       SampleCount: images.length,

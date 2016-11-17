@@ -140,7 +140,6 @@ describe('ECR/RepositoryMetrics handler', () => {
       handler.extractMetrics([image1, image2, image3], (err, metrics) => {
         expect(metrics.MetricData).toEqual(jasmine.arrayContaining([{
           MetricName: 'ImagesSize',
-          Value: 2,
           Unit: 'Bytes',
           StatisticValues: {
             SampleCount: 3,
