@@ -27,7 +27,7 @@ const extractMetrics = (images, cb) => {
 
   const metricData = {
     MetricData: metrics,
-    Namespace: 'Ext/AWS/ECS'
+    Namespace: 'Ext/AWS/ECR'
   };
 
   cb(null, metricData);
