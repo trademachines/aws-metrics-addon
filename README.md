@@ -13,6 +13,8 @@
 | Ext/AWS/ECS | DesiredTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that you won't to have. |
 | Ext/AWS/ECS | RunningTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that are currently running. |
 | Ext/AWS/ECS | PendingTasks | ClusterName, ServiceName | The number of tasks of a service in a cluster that are currently booting up. |
+| Ext/AWS/ECS | DiffDesiredAndRunningTasks | ClusterName, ServiceName | The difference between desired and running count values. |
+| Ext/AWS/ECS | DiffTaskDefinition | ClusterName, ServiceName | If any of the running tasks has a different version number than the service definition this will be 1 otherwise its 0. |
 
 # Configuration
 
