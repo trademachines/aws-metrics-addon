@@ -1,71 +1,75 @@
-"use strict";
+'use strict';
+
+const AWS    = require('aws-sdk');
 const _      = require('lodash');
 const async  = require('neo-async');
 const common = require('./common');
 
 const extractMetricsWithDebug = (event, cluster, cb) => {
-    console.log('cluster-based-metrics', JSON.stringify(event), JSON.stringify(cluster));
+  console.log('cluster-based-metrics', JSON.stringify(event),
+    JSON.stringify(cluster));
 
-    extractMetrics(cluster, cb);
+  extractMetrics(cluster, cb);
 };
 
 const extractMetrics = (cluster, cb) => {
-    let metrics = [];
+  let metrics = [];
 
-    metrics.push({
-        MetricName: 'RunningTasks',
-        Value: cluster.runningTasksCount,
-        Unit: 'Count'
-    });
-    metrics.push({
-        MetricName: 'PendingTasks',
-        Value: cluster.pendingTasksCount,
-        Unit: 'Count'
-    });
-    metrics.push({
-        MetricName: 'ActiveServices',
-        Value: cluster.activeServicesCount,
-        Unit: 'Count'
-    });
+  metrics.push({
+    MetricName: 'RunningTasks',
+    Value: cluster.runningTasksCount,
+    Unit: 'Count'
+  });
+  metrics.push({
+    MetricName: 'PendingTasks',
+    Value: cluster.pendingTasksCount,
+    Unit: 'Count'
+  });
+  metrics.push({
+    MetricName: 'ActiveServices',
+    Value: cluster.activeServicesCount,
+    Unit: 'Count'
+  });
 
-    const metricData = {
-        MetricData: metrics,
-        Namespace: 'Ext/AWS/ECS'
-    };
+  const metricData = {
+    MetricData: metrics,
+    Namespace: 'Ext/AWS/ECS'
+  };
 
-    cb(null, metricData);
+  cb(null, metricData);
 };
 
 const getClusterDescription = (ecs, eventInfo, cb) => {
-    ecs.describeClusters({ clusters: [ eventInfo.cluster ] }, (err, data) => {
-        if (err) {
-            return cb(err);
-        }
+  ecs.describeClusters({clusters: [eventInfo.cluster]}, (err, data) => {
+    if (err) {
+      return cb(err);
+    }
 
-        return cb(null, _.find(data.clusters, { clusterName: eventInfo.cluster }));
-    });
+    return cb(null, _.find(data.clusters, {clusterName: eventInfo.cluster}));
+  });
 };
 
-module.exports = (ecs, event, cb) => {
-    const info       = common.extractInfo(event);
-    const dimensions = [ { Name: 'ClusterName', Value: info.cluster } ];
+module.exports = (event, cb) => {
+  const ecs        = new AWS.ECS();
+  const info       = common.extractInfo(event);
+  const dimensions = [{Name: 'ClusterName', Value: info.cluster}];
 
-    async.waterfall([
-        (cb) => {
-            getClusterDescription(ecs, info, cb);
-        },
-        (clusterData, cb) => {
-            extractMetricsWithDebug(event, clusterData, cb);
-        },
-        (metrics, cb) => {
-            metrics.MetricData = _.map(metrics.MetricData, (m) => {
-                m.Dimensions = dimensions;
-                return m;
-            });
+  async.waterfall([
+    (cb) => {
+      getClusterDescription(ecs, info, cb);
+    },
+    (clusterData, cb) => {
+      extractMetricsWithDebug(event, clusterData, cb);
+    },
+    (metrics, cb) => {
+      metrics.MetricData = _.map(metrics.MetricData, (m) => {
+        m.Dimensions = dimensions;
+        return m;
+      });
 
-            cb(null, metrics);
-        }
-    ], cb);
+      cb(null, metrics);
+    }
+  ], cb);
 };
 
 module.exports.extractMetrics        = extractMetrics;
