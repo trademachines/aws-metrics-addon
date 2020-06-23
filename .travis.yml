@@ -4,7 +4,7 @@ node_js:
 after_success:
   - npm run coveralls
 before_deploy:
-  - yarn install --production
+  - npm prune --production
 deploy:
   provider: lambda
   function_name: metrics-addon
